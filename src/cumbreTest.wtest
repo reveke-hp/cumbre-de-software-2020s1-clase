@@ -1,0 +1,104 @@
+import paisesEmpresasActividades.*
+import cumbre.*
+import participantes.*
+import conocimientos.*
+
+test "tres participantes" {
+	const argentina = new Pais() 
+	const brasil = new Pais()
+	const colombia = new Pais()
+	
+	const juana = new Programador(pais = argentina, commits = 600, 
+		conocimientos = #{programacionBasica, css, html}
+	)
+	const lucia = new Programador(pais = brasil, commits = 800, 
+		conocimientos = #{programacionBasica, basesDeDatos}
+	)
+	const mariana = new Especialista(pais = argentina, commits = 200, 
+		conocimientos = #{
+			programacionBasica, instalacionLinux, objetos, disenioConObjetos
+		}
+	)
+	const susana = new Especialista(pais = colombia, commits = 1500, 
+		conocimientos = #{programacionBasica, objetos}
+	)
+	
+	cumbre.ingresa(juana)
+	cumbre.ingresa(lucia)
+	cumbre.ingresa(mariana)
+	
+	assert.equals(#{argentina, brasil}, cumbre.paisesDeLesParticipantes())
+	assert.equals(2, cumbre.cantidadDeParticipantes(argentina))
+	assert.equals(1, cumbre.cantidadDeParticipantes(brasil))
+	assert.equals(argentina, cumbre.paisConMasParticipantes())
+	assert.that(cumbre.esRelevante())
+
+}
+
+test "cuatro participantes" {
+	const argentina = new Pais() 
+	const brasil = new Pais()
+	const colombia = new Pais()
+	
+	const juana = new Programador(pais = argentina, commits = 600, 
+		conocimientos = #{programacionBasica, css, html}
+	)
+	const lucia = new Programador(pais = brasil, commits = 800, 
+		conocimientos = #{programacionBasica, basesDeDatos}
+	)
+	const mariana = new Especialista(pais = argentina, commits = 200, 
+		conocimientos = #{
+			programacionBasica, instalacionLinux, objetos, disenioConObjetos
+		}
+	)
+	const susana = new Especialista(pais = colombia, commits = 1500, 
+		conocimientos = #{programacionBasica, objetos}
+	)
+	
+	cumbre.ingresa(juana)
+	cumbre.ingresa(lucia)
+	cumbre.ingresa(mariana)
+	cumbre.ingresa(susana)
+	
+	assert.equals(#{argentina, brasil, colombia}, cumbre.paisesDeLesParticipantes())
+	assert.equals(argentina, cumbre.paisConMasParticipantes())
+	assert.notThat(cumbre.esRelevante())
+}
+
+test "conflictos" {
+	const argentina = new Pais() 
+	const brasil = new Pais()
+	const colombia = new Pais()
+	const coreaDelSur = new Pais()
+	const coreaDelNorte = new Pais()
+	
+	coreaDelSur.agregarConflictoCon(coreaDelNorte)
+	coreaDelNorte.agregarConflictoCon(coreaDelSur)
+	
+	cumbre.agregarAuspiciante(argentina)
+	cumbre.agregarAuspiciante(colombia)
+	cumbre.agregarAuspiciante(coreaDelNorte)
+	
+	const juana = new Programador(pais = argentina, commits = 600, 
+		conocimientos = #{programacionBasica, css, html}
+	)
+	const lucia = new Programador(pais = brasil, commits = 800, 
+		conocimientos = #{programacionBasica, basesDeDatos}
+	)
+	const mariana = new Especialista(pais = argentina, commits = 200, 
+		conocimientos = #{
+			programacionBasica, instalacionLinux, objetos, disenioConObjetos
+		}
+	)
+	const susana = new Especialista(pais = colombia, commits = 1500, 
+		conocimientos = #{programacionBasica, objetos}
+	)
+	
+	cumbre.ingresa(juana)
+	cumbre.ingresa(lucia)
+	cumbre.ingresa(mariana)
+	cumbre.ingresa(susana)
+	
+	assert.that(coreaDelSur.esConflictivoParaLaCumbre())
+	assert.equals([lucia], cumbre.participantesExtranjeros().asList())
+}
