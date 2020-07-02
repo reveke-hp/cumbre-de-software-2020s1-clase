@@ -7,6 +7,8 @@ object cumbre {
 	// esto esta muy mal malisimo
 	// const property paisesDeLosParticipantes = []
 	
+	
+	
 	method agregarAuspiciante(pais) {
 		paisesAuspiciantes.add(pais)
 	}
